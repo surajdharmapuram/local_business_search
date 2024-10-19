@@ -1,3 +1,4 @@
+import json
 import ollama
 import sys
 
@@ -10,10 +11,12 @@ def prompt(query):
 
     To help with this, extract the following information from the query in
     quotes above:
-    1. Name of the business being searched for
-    2. Product or list of products being searched for
-    3. Type of business being searched for
-    4. City that the user is searching in.
+    1. Name of a specific business being searched for, if any
+    2. Product or list of products being searched for, if any
+    3. Types of businesses being searched for, if any. This is the type of store
+       or business where the user might find the product(s) that they're
+       looking for.
+    4. City that the user is searching in, if any
     5. Any other context or descriptive information that would be useful in
        enriching the search query.
 
@@ -53,8 +56,8 @@ def parse(query):
                                     "description": "List of products being searched",
                                 },
                                 "business_type": {
-                                    "type": "string",
-                                    "description": "Type of business being searched",
+                                    "type": "array",
+                                    "description": "Types of businesses being searched. This is the type of store or business that the user might find the products they're searching for.",
                                 },
                                 "city": {
                                     "type": "string",
@@ -71,7 +74,8 @@ def parse(query):
                 },
             ])
     total_duration = response["total_duration"] / 10**9
-    print(response["message"]["tool_calls"][0]["function"]["arguments"])
+    output = response["message"]["tool_calls"][0]["function"]["arguments"]
+    print(json.dumps(output, indent=2))
     print(f"Elapsed: {total_duration} seconds")
 
 if __name__ == "__main__":
