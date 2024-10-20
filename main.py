@@ -1,4 +1,5 @@
 # This is a sample Python script.
+from itertools import count
 
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
@@ -7,7 +8,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from time import sleep
 
-_PREFIX =  "/Users/surajdharmapuram/Desktop/data"
+_PREFIX =  "/Users/surajdharmapuram/Desktop/data/pgb"
 
 def get_linked_subpage_urls(url, html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -40,7 +41,22 @@ def crawl(url):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    url = 'https://www.makernexus.org/'
-    print(list(get_linked_subpage_urls(url, requests.get(url).text)))
+    url = 'https://parisbaguette.com/'
+    websites = list(get_linked_subpage_urls(url, requests.get(url).text))
+    counter = 1;
+    all_data = []
+    for website in websites:
+        response = requests.get(website)
+        print(response.status_code)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        for data in soup.find_all("p"):
+            all_data.append(data.text)
+
+
+    with open(f"{_PREFIX}/{counter}.txt", "w") as f:
+        f.writelines([line + "\n" for line in all_data])
+
+
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
