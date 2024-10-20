@@ -14,3 +14,5 @@ Search query can be quoted or unquoted
 ```
 python parse_query.py "chocolate cake for birthday part in nob hill"
 ```
+
+Run the app `streamlit run app.py`
